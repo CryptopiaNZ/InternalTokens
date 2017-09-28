@@ -1,4 +1,4 @@
-pragma solidity ^0.4.11;
+pragma solidity ^0.4.8;
 
 /**
  * @title ERC20Basic
@@ -27,13 +27,15 @@ contract ERC20 is ERC20Basic {
 library SafeMath {
 
   function sub(uint256 a, uint256 b) internal constant returns (uint256) {
-    assert(b <= a);
+    if (b > a)
+        throw;
     return a - b;
   }
 
   function add(uint256 a, uint256 b) internal constant returns (uint256) {
     uint256 c = a + b;
-    assert(c >= a);
+    if (c < a)
+        throw;
     return c;
   }
 }
@@ -52,8 +54,8 @@ contract BasicToken is ERC20Basic {
   * @param _value The amount to be transferred.
   */
   function transfer(address _to, uint256 _value) public returns (bool) {
-    require(_to != address(0));
-    require(_value <= balances[msg.sender]);
+    if (_to == address(0)) throw;
+    if (_value > balances[msg.sender]) throw;
 
     // SafeMath.sub will throw if there is not enough balance.
     balances[msg.sender] = balances[msg.sender].sub(_value);
@@ -89,9 +91,9 @@ contract StandardToken is ERC20, BasicToken {
    * @param _value uint256 the amount of tokens to be transferred
    */
   function transferFrom(address _from, address _to, uint256 _value) public returns (bool) {
-    require(_to != address(0));
-    require(_value <= balances[_from]);
-    require(_value <= allowed[_from][msg.sender]);
+    if (_to == address(0)) throw;
+    if (_value > balances[_from]) throw;
+    if (_value > allowed[_from][msg.sender]) throw;
 
     balances[_from] = balances[_from].sub(_value);
     balances[_to] = balances[_to].add(_value);
@@ -150,14 +152,14 @@ contract StandardToken is ERC20, BasicToken {
 
   /* This unnamed function is called whenever someone tries to send ubiq to it */
   function () public {
-    assert(false);     // Prevents accidental sending of ubiq
+    throw;     // Prevents accidental sending of ubiq
   }
 
 }
 
 contract DotToken is StandardToken {
   string public constant standard = "ERC20";
-  string public constant name = "DotToken";
+  string public constant name = "Dot";
   string public constant symbol = "DOT";
   uint8 public constant decimals = 8;
 
