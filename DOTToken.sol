@@ -157,13 +157,13 @@ contract StandardToken is ERC20, BasicToken {
 
 }
 
-contract DotToken is StandardToken {
+contract DotCoin is StandardToken {
   string public constant standard = "ERC20";
-  string public constant name = "Dot";
+  string public constant name = "Dotcoin";
   string public constant symbol = "DOT";
   uint8 public constant decimals = 8;
 
-  function DotToken() public {
+  function DotCoin() public {
     uint256 INITIAL_SUPPLY = 525500000 * (10 ** uint256(decimals));
     totalSupply = INITIAL_SUPPLY;
     balances[msg.sender] = INITIAL_SUPPLY;
